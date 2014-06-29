@@ -19,7 +19,7 @@ module DaemonSpawn
   end
 
   def self.start(daemon, args) #:nodoc:
-    if !File.writable?(File.dirname(daemon.log_file))
+    if daemon.log and !File.writable?(File.dirname(daemon.log_file))
       STDERR.puts "Unable to write log file to #{daemon.log_file}"
       exit 1
     end
