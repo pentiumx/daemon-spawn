@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
      "daemon-spawn.gemspec",
      "lib/daemon_spawn.rb",
      "test/daemon_spawn_test.rb",
-     "test/helper.rb",
+     "test/test_helper.rb",
      "test/multi_daemon_spawn_test.rb",
      "test/servers/deaf_server.rb",
      "test/servers/echo_server.rb",
@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Daemon launching and management made dead simple}
   s.test_files = [
     "test/daemon_spawn_test.rb",
-     "test/helper.rb",
+     "test/test_helper.rb",
      "test/multi_daemon_spawn_test.rb",
      "test/servers/deaf_server.rb",
      "test/servers/echo_server.rb",
