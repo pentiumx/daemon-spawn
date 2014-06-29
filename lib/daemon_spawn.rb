@@ -41,12 +41,19 @@ module DaemonSpawn
       open(daemon.pid_file, 'w') { |f| f << Process.pid }
       Dir.chdir daemon.working_dir
       old_umask = File.umask 0000
-      log = File.new(daemon.log_file, "a")
       File.umask old_umask
-      log.sync = daemon.sync_log
+
       STDIN.reopen "/dev/null"
-      STDOUT.reopen log
-      STDERR.reopen STDOUT
+      if daemon.log
+        log = File.new(daemon.log_file, "a")
+        log.sync = daemon.sync_log
+        STDOUT.reopen log
+        STDERR.reopen STDOUT
+      else
+        STDOUT.reopen "/dev/null"
+        STDERR.reopen "/dev/null"
+      end
+
       trap("TERM") {daemon.stop; exit}
       daemon.start(args)
     end
@@ -84,7 +91,7 @@ module DaemonSpawn
   end
 
   class Base
-    attr_accessor :log_file, :pid_file, :sync_log, :working_dir, :app_name, :singleton, :index, :signal, :timeout
+    attr_accessor :log, :log_file, :pid_file, :sync_log, :working_dir, :app_name, :singleton, :index, :signal, :timeout
 
     def initialize(opts = {})
       raise 'You must specify a :working_dir' unless opts[:working_dir]
@@ -99,6 +106,7 @@ module DaemonSpawn
         self.pid_file += ".#{self.index}"
         self.log_file += ".#{self.index}"
       end
+      self.log = opts[:log]
       self.sync_log = opts[:sync_log]
       self.singleton = opts[:singleton] || false
     end
